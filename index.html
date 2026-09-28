@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roblox Script AI</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+  background:#0b1016;
+  color:#edf3f7;
+  min-height:100vh;
+}
+
+header{
+  height:70px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 6%;
+  border-bottom:1px solid #202a33;
+  background:#0b1016;
+}
+
+.logo{
+  font-size:20px;
+  font-weight:800;
+  letter-spacing:1px;
+}
+
+.logo span{
+  color:#a4d64c;
+}
+
+.badge{
+  color:#a4d64c;
+  border:1px solid #3d5221;
+  padding:8px 12px;
+  border-radius:20px;
+  font-size:12px;
+}
+
+.hero{
+  text-align:center;
+  padding:65px 20px 35px;
+}
+
+.hero h1{
+  font-size:clamp(42px,9vw,80px);
+  line-height:1;
+  margin-bottom:20px;
+}
+
+.hero h1 span{
+  color:#a4d64c;
+}
+
+.hero p{
+  color:#91a0ad;
+  max-width:650px;
+  margin:auto;
+  font-size:17px;
+  line-height:1.6;
+}
+
+.container{
+  width:min(1000px,92%);
+  margin:30px auto 70px;
+}
+
+.card{
+  background:#111820;
+  border:1px solid #26323c;
+  border-radius:18px;
+  padding:22px;
+  margin-bottom:20px;
+  box-shadow:0 15px 40px rgba(0,0,0,.25);
+}
+
+.label{
+  font-size:13px;
+  color:#9ba9b5;
+  margin-bottom:10px;
+  display:block;
+}
+
+textarea{
+  width:100%;
+  min-height:150px;
+  resize:vertical;
+  background:#0b1016;
+  border:1px solid #33404b;
+  border-radius:12px;
+  color:white;
+  padding:16px;
+  font-size:15px;
+  outline:none;
+}
+
+textarea:focus{
+  border-color:#a4d64c;
+}
+
+.examples{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:12px;
+}
+
+.example{
+  background:#18212a;
+  border:1px solid #303d48;
+  color:#b7c3cc;
+  padding:9px 12px;
+  border-radius:10px;
+  cursor:pointer;
+  font-size:12px;
+}
+
+.example:hover{
+  border-color:#a4d64c;
+  color:#a4d64c;
+}
+
+.buttons{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin-top:18px;
+}
+
+button{
+  border:0;
+  border-radius:11px;
+  padding:14px;
+  font-weight:700;
+  cursor:pointer;
+  font-size:14px;
+}
+
+.generate{
+  background:#a4d64c;
+  color:#10150b;
+}
+
+.secondary{
+  background:#202b35;
+  color:#edf3f7;
+}
+
+button:active{
+  transform:scale(.98);
+}
+
+.output-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:12px;
+}
+
+.output-head h2{
+  font-size:18px;
+}
+
+.copy{
+  background:#202b35;
+  color:#a4d64c;
+  padding:9px 13px;
+  font-size:12px;
+}
+
+pre{
+  white-space:pre-wrap;
+  word-break:break-word;
+  background:#080c11;
+  border:1px solid #26313a;
+  border-radius:12px;
+  padding:18px;
+  min-height:260px;
+  color:#dce7ee;
+  font-family:monospace;
+  font-size:13px;
+  line-height:1.55;
+  overflow:auto;
+}
+
+.info{
+  color:#91a0ad;
+  font-size:13px;
+  line-height:1.7;
+  margin-top:15px;
+}
+
+.status{
+  margin-top:12px;
+  color:#a4d64c;
+  font-size:13px;
+}
+
+footer{
+  text-align:center;
+  color:#63717d;
+  padding:30px;
+  font-size:12px;
+}
+
+@media(max-width:650px){
+  header{
+    padding:0 20px;
+  }
+
+  .badge{
+    display:none;
+  }
+
+  .hero{
+    padding-top:45px;
+  }
+
+  .buttons{
+    grid-template-columns:1fr;
+  }
+
+  .card{
+    padding:16px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">ROBLOX <span>SCRIPT AI</span></div>
+  <div class="badge">LUAU GENERATOR</div>
+</header>
+
+<section class="hero">
+  <h1>From idea<br>to <span>script.</span></h1>
+  <p>
+    Create Roblox Luau starter scripts from a simple description.
+    Generate, explain, or fix your script.
+  </p>
+</section>
+
+<main class="container">
+
+  <div class="card">
+    <label class="label">YOUR REQUEST</label>
+
+    <textarea id="request"
+      placeholder="Example: Make a coin system with leaderstats..."></textarea>
+
+    <div class="examples">
+      <button class="example" onclick="useExample('Make a coin system with leaderstats')">
+        Coin System
+      </button>
+
+      <button class="example" onclick="useExample('Make a kill brick that respawns players')">
+        Kill Brick
+      </button>
+
+      <button class="example" onclick="useExample('Make a teleport pad to another part')">
+        Teleport
+      </button>
+
+      <button class="example" onclick="useExample('Make a checkpoint system for an obby')">
+        Checkpoint
+      </button>
+
+      <button class="example" onclick="useExample('Make a simple shop GUI')">
+        Shop GUI
+      </button>
+    </div>
+
+    <div class="buttons">
+      <button class="generate" onclick="generateScript()">
+        Generate Script
+      </button>
+
+      <button class="secondary" onclick="explainScript()">
+        Explain
+      </button>
+
+      <button class="secondary" onclick="fixScript()">
+        Fix Error
+      </button>
+    </div>
+
+    <div id="status" class="status"></div>
+  </div>
+
+  <div class="card">
+
+    <div class="output-head">
+      <h2>Generated Code</h2>
+      <button class="copy" onclick="copyCode()">Copy Code</button>
+    </div>
+
+    <pre id="output">-- Your generated Roblox Luau script will appear here.</pre>
+
+    <div class="info">
+      <b>Placement:</b>
+      Most server scripts go inside
+      <b>ServerScriptService</b>.
+      UI LocalScripts usually go inside
+      <b>StarterGui</b>.
+      Shared modules can go inside
+      <b>ReplicatedStorage</b>.
+    </div>
+
+  </div>
+
+</main>
+
+<footer>
+  Roblox Script AI • Built for Roblox developers
+</footer>
+
+
+<script>
+
+const requestBox = document.getElementById("request");
+const output = document.getElementById("output");
+const statusBox = document.getElementById("status");
+
+function useExample(text){
+  requestBox.value = text;
+  requestBox.focus();
+}
+
+function setStatus(text){
+  statusBox.textContent = text;
+}
+
+function generateScript(){
+
+  const request = requestBox.value.toLowerCase().trim();
+
+  if(!request){
+    output.textContent = "-- Please describe the Roblox script you want.";
+    setStatus("Enter a request first.");
+    return;
+  }
+
+  let code = "";
+
+  if(
+    request.includes("coin") ||
+    request.includes("leaderstats") ||
+    request.includes("cash")
+  ){
+
+code = `-- COIN / LEADERSTATS SYSTEM
+-- Place this Script inside ServerScriptService
+
+local Players = game:GetService("Players")
+
+Players.PlayerAdded:Connect(function(player)
+
+    local leaderstats = Instance.new("Folder")
+    leaderstats.Name = "leaderstats"
+    leaderstats.Parent = player
+
+    local coins = Instance.new("IntValue")
+    coins.Name = "Coins"
+    coins.Value = 0
+    coins.Parent = leaderstats
+
+end)
+
+-- Example:
+-- player.leaderstats.Coins.Value += 1
+`;
+
+  }
+
+  else if(
+    request.includes("kill") ||
+    request.includes("damage") ||
+    request.includes("lava")
+  ){
+
+code = `-- KILL BRICK
+-- Place this Script inside the Part
+
+local part = script.Parent
+
+part.Touched:Connect(function(hit)
+
+    local character = hit.Parent
+    local humanoid = character:FindFirstChildOfClass("Humanoid")
+
+    if humanoid then
+        humanoid.Health = 0
+    end
+
+end)
+`;
+
+  }
+
+  else if(
+    request.includes("teleport") ||
+    request.includes("teleporter") ||
+    request.includes("teleport pad")
+  ){
+
+code = `-- TELEPORT PAD
+-- Put this Script inside the teleport Part
+-- Create another Part named "TeleportTarget"
+
+local Players = game:GetService("Players")
+
+local pad = script.Parent
+local target = workspace:WaitForChild("TeleportTarget")
+
+local debounce = {}
+
+pad.Touched:Connect(function(hit)
+
+    local character = hit.Parent
+    local humanoid = character:FindFirstChildOfClass("Humanoid")
+
+    if not humanoid then
+        return
+    end
+
+    local player = Players:GetPlayerFromCharacter(character)
+
+    if not player then
+        return
+    end
+
+    if debounce[player] then
+        return
+    end
+
+    debounce[player] = true
+
+    character:PivotTo(target.CFrame + Vector3.new(0, 3, 0))
+
+    task.wait(1)
+    debounce[player] = nil
+
+end)
+`;
+
+  }
+
+  else if(
+    request.includes("checkpoint") ||
+    request.includes("obby")
+  ){
+
+code = `-- CHECKPOINT SYSTEM
+-- Place this Script inside each checkpoint Part
+-- Give each checkpoint an Attribute named "CheckpointNumber"
+
+local Players = game:GetService("Players")
+
+local checkpoint = script.Parent
+
+checkpoint.Touched:Connect(function(hit)
+
+    local character = hit.Parent
+    local humanoid = character:FindFirstChildOfClass("Humanoid")
+
+    if not humanoid then
+        return
+    end
+
+    local player = Players:GetPlayerFromCharacter(character)
+
+    if not player then
+        return
+    end
+
+    local checkpointNumber =
+        checkpoint:GetAttribute("CheckpointNumber")
+
+    if checkpointNumber then
+        player:SetAttribute(
+            "Checkpoint",
+            checkpointNumber
+        )
+    end
+
+end)
+
+Players.PlayerAdded:Connect(function(player)
+
+    player:SetAttribute("Checkpoint", 0)
+
+end)
+`;
+
+  }
+
+  else if(
+    request.includes("shop") ||
+    request.includes("gui")
+  ){
+
+code = `-- SIMPLE SHOP GUI STARTER
+-- Put this LocalScript inside a TextButton
+-- Connect this to your own server-side purchase system
+
+local button = script.Parent
+
+button.MouseButton1Click:Connect(function()
+
+    print("Shop button clicked!")
+
+    -- Example:
+    -- game.ReplicatedStorage.BuyItem:FireServer("ItemName")
+
+end)
+`;
+
+  }
+
+  else {
+
+code = `-- ROBLOX LUAU STARTER SCRIPT
+-- Describe the exact behavior you want
+-- and customize this starter.
+
+local Players = game:GetService("Players")
+
+local function setupPlayer(player)
+
+    print("Player joined:", player.Name)
+
+end
+
+Players.PlayerAdded:Connect(setupPlayer)
+
+for _, player in ipairs(Players:GetPlayers()) do
+    setupPlayer(player)
+end
+
+-- TIP:
+-- Put server gameplay scripts in ServerScriptService.
+-- Put LocalScripts for UI/client controls in StarterGui
+-- or StarterPlayerScripts.
+`;
+
+  }
+
+  output.textContent = code;
+  setStatus("Script generated!");
+}
+
+
+function explainScript(){
+
+  const code = output.textContent;
+
+  if(
+    !code ||
+    code.startsWith("-- Your generated")
+  ){
+    setStatus("Generate a script first.");
+    return;
+  }
+
+  output.textContent =
+`EXPLANATION
+
+This script is a Roblox Luau starter script.
+
+Placement:
+${getPlacement(code)}
+
+Main purpose:
+The script listens for Roblox events and performs
+an action when the required event happens.
+
+Important:
+For multiplayer gameplay, keep important game logic
+on the server instead of trusting the player's client.
+
+--- CODE ---
+
+${code}`;
+
+  setStatus("Explanation added.");
+}
+
+
+function getPlacement(code){
+
+  if(code.includes("LEADERSTATS"))
+    return "ServerScriptService";
+
+  if(code.includes("KILL BRICK"))
+    return "Inside the Part";
+
+  if(code.includes("TELEPORT PAD"))
+    return "Inside the Teleport Part";
+
+  if(code.includes("CHECKPOINT SYSTEM"))
+    return "Inside each checkpoint Part";
+
+  if(code.includes("SHOP GUI"))
+    return "StarterGui > TextButton";
+
+  return "ServerScriptService";
+}
+
+
+function fixScript(){
+
+  const current = output.textContent;
+
+  if(
+    !current ||
+    current.startsWith("-- Your generated")
+  ){
+    setStatus("Generate or paste a script first.");
+    return;
+  }
+
+  output.textContent =
+`-- SCRIPT CHECK
+
+-- Common things to check:
+-- 1. Make sure the script is in the correct location.
+-- 2. Check that Part names match exactly.
+-- 3. Check capitalization of Roblox objects.
+-- 4. Use ServerScriptService for server scripts.
+-- 5. Use LocalScript for client/UI code.
+
+-- Your current script:
+
+${current}`;
+
+  setStatus("Basic script check complete.");
+}
+
+
+function copyCode(){
+
+  const code = output.textContent;
+
+  navigator.clipboard.writeText(code)
+    .then(function(){
+      setStatus("Code copied!");
+    })
+    .catch(function(){
+      setStatus("Select the code and copy it manually.");
+    });
+
+}
+
+</script>
+
+</body>
+  </html>
